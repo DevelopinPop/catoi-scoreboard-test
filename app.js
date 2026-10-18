@@ -60,7 +60,7 @@ function home() {
   page('Home', `<div class="maincontent">
   <p>This is a Cat Olympiad in Informatics statistics website.</p>
   <h3>Awards</h3>
-  <ul><li>Someone being marked as unofficial is at the organisers' discretion. General rule of thumb is ≥ NOI silver.</li>
+  <ul><li>Someone is marked as unofficial if they did not participate onsite.</li>
   <li>Unlike NOI and IOI, Honourable Mention is awarded to the top non-medallist, non-zero score in each school.</li></ul>
   <p>Browse the <a href="#/olympiads">olympiads</a> or all <a href="#/tasks">tasks</a>.</p></div>`);
 }
@@ -88,7 +88,7 @@ function olympiad(y) {
   <h3>Awards</h3><ul><li>Maximum possible score: ${Y.tasks.map(t => f(t.max, t.dp)).join(' + ')} = ${f(Y.max, Y.dp)}</li>
   ${medal('gold', 'Gold medals')}${medal('silver', 'Silver medals')}${medal('bronze', 'Bronze medals')}
   <li>Honourable mentions: ${n('hm')}</li></ul>
-  <p>Do note that someone being marked as unofficial is at the organisers' discretion. General rule of thumb is ≥ NOI silver.</p>
+  <p>Do note that someone is marked as unofficial if they did not participate onsite.</p>
   <p>Unlike NOI and IOI, Honourable Mention is awarded to the top non-medallist, non-zero score in each school.</p></div>`);
 }
 
