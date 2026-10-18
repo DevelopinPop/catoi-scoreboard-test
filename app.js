@@ -113,15 +113,44 @@ function results(y, q) {
   <th rowspan="2">Award</th><th rowspan="2">Special Award(s)</th></tr><tr><th>Abs.</th><th>Rel.</th></tr>${body}</tbody></table></div>`);
 }
 
-function tasks(year) {
-  const ys = (year ? [year] : Object.keys(D.Y)).reverse().filter(y => D.Y[y]); if (year && !ys.length) return nf();
-  const body = ys.map(y => { const Y = D.Y[y], N = Y.off.length;
+// Builds a sortable <th>. base = hash path, k = active key, dir = active dir, def = first-click direction.
+function sortTh(base, k, dir, key, label, def = 'desc', attr = 'rowspan="2"') {
+  const next = k == key ? (dir == 'asc' ? 'desc' : 'asc') : def;
+  return `<th ${attr}><a href="#/${base}?sort=${key}_${next}">${label}</a>${k == key ? `<div class="sorttriangle">${dir == 'asc' ? '▲' : '▼'}</div>` : ''}</th>`;
+}
+
+function tasks(year, q) {
+  const ys = Object.keys(D.Y).filter(y => !year || y == year); if (!ys.length) return nf();
+  let [k, dir] = (q.get('sort') || 'year_desc').split('_');
+  const items = ys.flatMap(y => { const Y = D.Y[y], N = Y.off.length;
     return Y.tasks.map((t, i) => { const sc = Y.off.map(r => r.s[i]), avg = N ? sum(sc) / N : 0, full = sc.filter(v => v >= t.max).length;
-      return `<tr>${i ? '' : `<td rowspan="${Y.tasks.length}"><a href="#/olympiads/${y}">${y}</a></td>`}<td>${i + 1}</td><td>${E(t.name)}</td><td>${f(t.max, t.dp)}</td>
-      <td>${f(avg, 2)}</td><td>${f(avg / t.max * 100, 2)}%</td><td>${full}</td><td>${N ? f(full / N * 100, 2) : '0.00'}%</td></tr>`; }).join(''); }).join('');
-  const t = `<table><tbody><tr><th rowspan="2">Year</th><th rowspan="2">No.</th><th rowspan="2">Name</th><th rowspan="2">Max. Score</th>
-  <th colspan="2">Average Score</th><th colspan="2">Full Solutions</th></tr><tr><th>Abs.</th><th>Rel.</th><th>Abs.</th><th>Rel.</th></tr>${body}</tbody></table>`;
+      return {y, i, t, avg, rel: avg / t.max, full, fullrel: N ? full / N : 0}; }); });
+  const key = {year: x => +x.y, name: x => x.t.name.toLowerCase(), max: x => x.t.max, avg: x => x.avg, avgrel: x => x.rel, full: x => x.full, fullrel: x => x.fullrel};
+  const kf = key[k] || key.year, m = dir == 'asc' ? 1 : -1;
+  items.sort((a, b) => ((kf(a) > kf(b)) - (kf(a) < kf(b))) * m || (a.y - b.y) * (k == 'year' ? m : -1) || a.i - b.i);
+  const grouped = k == 'year', base = 'tasks' + (year ? '/' + year : '');
+  const body = items.map((x, n) => { const {y, i, t} = x, span = grouped ? D.Y[y].tasks.length : 0;
+    const yearCell = grouped ? (i == 0 || n == 0 || items[n-1].y != y ? `<td rowspan="${span}"><a href="#/olympiads/${y}">${y}</a></td>` : '') : `<td><a href="#/olympiads/${y}">${y}</a></td>`;
+    return `<tr>${yearCell}<td>${i + 1}</td><td>${E(t.name)}</td><td>${f(t.max, t.dp)}</td><td>${f(x.avg, 2)}</td><td>${f(x.rel * 100, 2)}%</td><td>${x.full}</td><td>${f(x.fullrel * 100, 2)}%</td></tr>`; }).join('');
+  const T = (key, l, def, attr) => sortTh(base, k, dir, key, l, def, attr);
+  const t = `<table><tbody><tr>${T('year', 'Year', 'desc')}<th rowspan="2">No.</th>${T('name', 'Name', 'asc')}${T('max', 'Max. Score')}
+  <th colspan="2">Average Score</th><th colspan="2">Full Solutions</th></tr>
+  <tr>${T('avg', 'Abs.', 'desc', '')}${T('avgrel', 'Rel.', 'desc', '')}${T('full', 'Abs.', 'desc', '')}${T('fullrel', 'Rel.', 'desc', '')}</tr>${body}</tbody></table>`;
   page('Tasks', (year ? yearHead(year, 'tasks') : '') + box('Tasks', t));
+}
+
+function schools(q) {
+  let [k, dir] = (q.get('sort') || 'school_asc').split('_');
+  const codes = new Set(Object.values(D.Y).flatMap(Y => Y.rows.map(r => r.school)).filter(Boolean)); // only schools with at least one contestant
+  const list = [...codes].map(c => { const m = {gold: 0, silver: 0, bronze: 0};
+    Object.values(D.Y).forEach(Y => Y.off.forEach(r => { if (r.school == c && m[r.award] != null) m[r.award]++; }));
+    return {code: c, name: D.S[c] || c, ...m, total: m.gold + m.silver + m.bronze}; });
+  // medal sort = gold, then silver, then bronze
+  const key = {school: x => x.name.toLowerCase(), medals: x => x.gold * 1e6 + x.silver * 1e3 + x.bronze, total: x => x.total}, kf = key[k] || key.school, m = dir == 'asc' ? 1 : -1;
+  list.sort((a, b) => ((kf(a) > kf(b)) - (kf(a) < kf(b))) * m || a.name.localeCompare(b.name));
+  const T = (key, l, def, attr) => sortTh('schools', k, dir, key, l, def, attr);
+  page('Schools', box('Schools', `<table><tbody><tr>${T('school', 'School', 'asc')}${T('medals', 'Medals', 'desc', 'colspan="3"')}${T('total', 'Total', 'desc')}</tr>
+  <tr><th>G</th><th>S</th><th>B</th></tr>${list.map(x => `<tr><td class="leftalign">${E(x.name)}</td><td>${x.gold}</td><td>${x.silver}</td><td>${x.bronze}</td><td>${x.total}</td></tr>`).join('')}</tbody></table>`));
 }
 
 function delegations(y) {
@@ -154,7 +183,7 @@ async function route() {
   try {
     if (!D) await load();
     const [path, qs] = location.hash.slice(1).split('?'), [a, b] = path.split('/').filter(Boolean), q = new URLSearchParams(qs || '');
-    ({undefined: home, olympiads: () => b ? olympiad(b) : olympiads(q), results: () => results(b, q), tasks: () => tasks(b),
+    ({undefined: home, olympiads: () => b ? olympiad(b) : olympiads(q), results: () => results(b, q), tasks: () => tasks(b, q), schools: () => schools(q),
       delegations: () => delegations(b), people: () => person(b)}[a] || nf)();
     window.scrollTo(0, 0);
   } catch (e) { app.innerHTML = `<div class="maincontent warning">${E(e.message)}</div>`; console.error(e); }
