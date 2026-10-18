@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html><head>
+<base href="https://stats.ioinformatics.org/"><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="stylesheet" type="text/css" href="design.css"><!--[if IE 9]><style type="text/css">.countrydata {min-width: 380px;}</style><![endif]--><title>Ashley Aragorn Khoo</title>
+</head>
+<body>
+<div class="mainpage"><a class="nounder" href="https://ioinformatics.org/"><img class="mainimage" alt="IOI" width="159" height="90" src="img/logo.png"></a><a class="nounder" href="/"><div class="mainheader">International Olympiad in Informatics – Statistics</div></a><div><div class="mainmenu"><a href="olympiads/">Olympiads</a><a href="countries/">Countries</a><a href="tasks/">Tasks</a><a href="halloffame/">Hall of Fame</a><a href="search">Search</a></div><div class="secmenu"><a href="login">Login</a><a href="people/add">Add</a><a href="people/7245/edit">Edit</a></div></div><div class="participantinfo"><img class="participantflag" height="180" src="img/photos/2025/7245.jpeg" alt="Ashley Aragorn Khoo"><div class="participantdata"><div class="participantname"><div>Ashley Aragorn Khoo</div></div>
+<div class="participantmedals"><div class="goldcount">{{medal_count[0]}}</div><div class="silvercount">{{medal_count[1]}}</div><div class="bronzecount">{{medal_count[2]}}</div></div></div></div><div class="basicname">Contestant</div><div class="maincontent nocorner">
+
+{% if (contestant_olympiad_list | length) > 0%}
+<table border="1"><tbody>
+	<tr>
+		<th rowspan="2">
+			<a href="people/7245?sort=year_asc">Year</a>
+			<div class="sorttriangle">▼</div></th>
+		<th rowspan="2">
+			<a href="people/7245?sort=country_asc">Country</a>
+		</th>
+		<th rowspan="2" colspan="{{ contestant_olympiad_list[4] | map('length') | max }}">Tasks</th>
+		<th colspan="2">Score</th><th colspan="2">Rank</th>
+		<th rowspan="2"><a href="people/7245?sort=medal_desc">Award</a></th></tr>
+		<th rowspan="2">Special Award(s)</th></tr>
+		<tr><th>Abs.</th>
+		<th><a href="people/7245?sort=rel_score_desc">Rel.</a></th><th><a href="people/7245?sort=abs_rank_asc">Abs.</a></th>
+		<th><a href="people/7245?sort=rel_rank_desc">Rel.</a></th>
+	</tr>
+
+
+{%for olympiad in contestant_olympiad_list%}
+
+{# olympiad stores [year, school_code, school, award, [task1_name, task2_name, ..., taskN_name], [task1_score, task2_score, ..., taskN_score], olymp_tot_score (often 800), tot_score_percent, rank, percentile, special_award] #}
+{# award can be "", "hm", "bronze", "silver", "gold" #}
+
+{%if (award | lower) != ""%}
+
+	<tr>
+		<td class="{{olympiad[3]}}"><a href="olympiads/{{olympiad[0]}}">{{olympiad[0]}}</a></td>
+		<td class="{{olympiad[3]}}"><a href="delegations/{{olympiad[1]}}/{{olympiad[0]}}">{{olympiad[2]}}</a></td>
+		
+		{%for task in olympiad[4]%}
+		<td class="{{olympiad[3]}} taskscore"><a href="tasks/{{olympiad[0]}}/{{task}}">{{olympiad[5][loop.index0]}}</a></td>
+		{%endfor%}
+		<td class="{{olympiad[3]}}" colspan="{{(olympiad[5] | length)}}"></td>
+		<td class="{{olympiad[3]}}">{{ "%.2f"|format(olympiad[5] | sum) }}</td>
+		<td class="{{olympiad[3]}}">{{ "%.2f"|format((olympiad[5] | sum) / olympiad[6]) }}%</td>
+		<td class="{{olympiad[3]}}">{{olympiad[7]}}/{{olympiad[8]}}</td>
+		<td class="{{olympiad[3]}}">{{ "%.2f"|format(100 - (((olympiad[7] - 1)/olympiad[8])*100)) }}%</td>
+		
+		
+		{%if (award | lower) == "gold"%}
+		<td class="{{olympiad[3]}}">Gold</td>
+		{%elif (award | lower == "silver")%}
+		<td class="{{olympiad[3]}}">Silver</td>
+		{%elif (award | lower == "bronze")%}
+		<td class="{{olympiad[3]}}">Bronze</td>
+		{%else%}
+		<td class="{{olympiad[3]}}">Honourable Mention</td>
+		{%endif%}
+		<td class="{{olympiad[3]}}">{{olympiad[9]}}</td>
+	</tr>
+
+
+{%else%}
+	<tr>
+		<td><a href="olympiads/{{olympiad[0]}}">{{olympiad[0]}}</a></td>
+		<td><a href="delegations/{{olympiad[1]}}/{{olympiad[0]}}">{{olympiad[2]}}</a></td>
+		
+		{%for task in olympiad[4]%}
+		<td><a href="tasks/{{olympiad[0]}}/{{task}}">{{olympiad[5][loop.index0]}}</a></td>
+		{%endfor%}
+		<td colspan="{{(olympiad[5] | length)}}"></td>
+		<td>{{ "%.2f"|format(olympiad[5] | sum) }}</td>
+		<td>{{ "%.2f"|format((olympiad[5] | sum) / olympiad[6]) }}%</td>
+		<td>{{olympiad[7]}}/{{olympiad[8]}}</td>
+		<td>{{ "%.2f"|format(100 - (((olympiad[7] - 1)/olympiad[8])*100)) }}%</td>
+		<td></td>
+		<td>{{olympiad[9]}}</td>
+	</tr>
+
+{%endif%}
+{%endfor%}
+</tbody></table>
+</div>
+
+{%endif%}
+
+{% if (delegations_list | length) > 0%}
+
+<div class="basicname">Delegation member</div><div class="maincontent nocorner"><table border="1"><tbody><tr><th>Year</th><th>School</th><th>Role</th></tr>
+
+
+{%for delegation in	delegations_list%}
+	<tr>
+	<td><a href="olympiads/{{delegation[0]}}">{{delegation[0]}}</a></td>
+	<td><a href="delegations/{{delegation[1]}}/2025">{{delegation[2]}}</a></td>
+	<td>Guest</td>
+	</tr>
+	
+{%endfor%}
+</tbody></table></div></div>
+
+
+{%endif%}
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table border="1">
+  <tbody>
+    <tr>
+      <th rowspan="2">
+        <a href="people/804?sort=year_asc">Year</a>
+        <div class="sorttriangle">▼</div>
+      </th>
+      <th rowspan="2">
+        <a href="people/804?sort=country_asc">Country</a>
+      </th>
+      <th rowspan="2" colspan="8">Tasks</th>
+      <th colspan="2">Score</th>
+      <th colspan="2">Rank</th>
+      <th rowspan="2">
+        <a href="people/804?sort=medal_desc">Award</a>
+      </th>
+    </tr>
+    <tr>
+      <th>Abs.</th>
+      <th><a href="people/804?sort=rel_score_desc">Rel.</a></th>
+      <th><a href="people/804?sort=abs_rank_asc">Abs.</a></th>
+      <th><a href="people/804?sort=rel_rank_desc">Rel.</a></th>
+    </tr>
+
+    <tr>
+      <td class="gold"><a href="olympiads/2012">2012</a></td>
+      <td class="gold"><a href="delegations/BLR/2012">Belarus</a></td>
+      <td class="gold taskscore"><a href="tasks/2012/odometer">88</a></td>
+      <td class="gold taskscore"><a href="tasks/2012/rings">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2012/scrivener">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2012/city">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2012/supper">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2012/tournament">100</a></td>
+      <td class="gold" colspan="2"></td>
+      <td class="gold">588</td>
+      <td class="gold">98.00%</td>
+      <td class="gold">2/310</td>
+      <td class="gold">99.68%</td>
+      <td class="gold">Gold</td>
+    </tr>
+
+    <tr>
+      <td class="gold"><a href="olympiads/2011">2011</a></td>
+      <td class="gold"><a href="delegations/BLR/2011">Belarus</a></td>
+      <td class="gold taskscore"><a href="tasks/2011/garden">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2011/race">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2011/ricehub">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2011/crocodile">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2011/elephants">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2011/parrots">100</a></td>
+      <td class="gold" colspan="2"></td>
+      <td class="gold">600</td>
+      <td class="gold">100.00%</td>
+      <td class="gold">1/303</td>
+      <td class="gold">100.00%</td>
+      <td class="gold">Gold</td>
+    </tr>
+
+    <tr>
+      <td class="gold"><a href="olympiads/2010">2010</a></td>
+      <td class="gold"><a href="delegations/BLR/2010">Belarus</a></td>
+      <td class="gold taskscore"><a href="tasks/2010/cluedo">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2010/hottercolder">95</a></td>
+      <td class="gold taskscore"><a href="tasks/2010/quality">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2010/language">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2010/memory">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2010/traffic">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2010/maze">83</a></td>
+      <td class="gold taskscore"><a href="tasks/2010/saveit">100</a></td>
+      <td class="gold">778</td>
+      <td class="gold">94.88%</td>
+      <td class="gold">1/297</td>
+      <td class="gold">100.00%</td>
+      <td class="gold">Gold</td>
+    </tr>
+
+    <tr>
+      <td class="gold"><a href="olympiads/2009">2009</a></td>
+      <td class="gold"><a href="delegations/BLR/2009">Belarus</a></td>
+      <td class="gold taskscore"><a href="tasks/2009/archery">43</a></td>
+      <td class="gold taskscore"><a href="tasks/2009/hiring">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2009/poi">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2009/raisins">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2009/garage">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2009/mecho">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2009/regions">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2009/salesman">100</a></td>
+      <td class="gold">743</td>
+      <td class="gold">92.88%</td>
+      <td class="gold">1/301</td>
+      <td class="gold">100.00%</td>
+      <td class="gold">Gold</td>
+    </tr>
+
+    <tr>
+      <td class="gold"><a href="olympiads/2008">2008</a></td>
+      <td class="gold"><a href="delegations/BLR/2008">Belarus</a></td>
+      <td class="gold taskscore"><a href="tasks/2008/typ">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2008/fsh">45</a></td>
+      <td class="gold taskscore"><a href="tasks/2008/isl">22</a></td>
+      <td class="gold taskscore"><a href="tasks/2008/tel">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2008/lin">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2008/pbs">70</a></td>
+      <td class="gold" colspan="2"></td>
+      <td class="gold">437</td>
+      <td class="gold">72.83%</td>
+      <td class="gold">7/283</td>
+      <td class="gold">97.88%</td>
+      <td class="gold">Gold</td>
+    </tr>
+
+    <tr>
+      <td class="gold"><a href="olympiads/2007">2007</a></td>
+      <td class="gold"><a href="delegations/BLR/2007">Belarus</a></td>
+      <td class="gold taskscore"><a href="tasks/2007/aliens">80</a></td>
+      <td class="gold taskscore"><a href="tasks/2007/flood">55</a></td>
+      <td class="gold taskscore"><a href="tasks/2007/sails">80</a></td>
+      <td class="gold taskscore"><a href="tasks/2007/miners">100</a></td>
+      <td class="gold taskscore"><a href="tasks/2007/pairs">56</a></td>
+      <td class="gold taskscore"><a href="tasks/2007/training">30</a></td>
+      <td class="gold" colspan="2"></td>
+      <td class="gold">401</td>
+      <td class="gold">66.83%</td>
+      <td class="gold">20/285</td>
+      <td class="gold">93

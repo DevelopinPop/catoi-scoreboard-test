@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html><head><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/captcha/recaptcha/hunter.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/captcha/recaptcha/interceptor.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/communication_helpers.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/core_helpers.js"></script>
+<base href="/"><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="stylesheet" href="{{url_for('static', filename='design.css')}}"><!--[if IE 9]><style type="text/css">.countrydata {min-width: 380px;}</style><![endif]--><title>CatOI {{year}}: Results</title>
+</head>
+<body>
+<div class="mainpage"><a class="nounder" href="https://ioinformatics.org/"><img class="mainimage" alt="CatOI" width="159" height="90" src="{{url_for('static', filename='logo.png')}}"></a><a class="nounder" href="/"><div class="mainheader">Cat Olympiad in Informatics – Statistics</div></a><div><div class="mainmenu"><a href="olympiads/">Olympiads</a><a href="countries/">Schools</a><a href="tasks/">Tasks</a><a href="halloffame/">Hall of Fame</a><a href="search">Search</a></div><div class="secmenu"><a href="login">Login</a><a href="people/add">Add</a></div></div><div class="countryinfo"><div class="countrydata olympdata"><div class="countryname">
+
+{% if year!='2024' %}<a href="results/{{year | int-1}}">←</a>{% endif %}
+
+<div>CatOI {{year}}</div>
+
+{% if year!='2024' %}<a href="results/{{year | int+1}}">→</a>{% endif %}
+
+</div>
+<div class="countrymenu"><a href="administration/{{year}}">Administration</a><a href="tasks/{{year}}/">Tasks</a><a href="contestants/{{year}}">Contestants</a><a href="delegations/{{year}}">Delegations</a><a href="results/{{year}}">Results</a><a class="selected" href="olympiads/{{year}}">Main</a></div></div></div>
+	<div class="maincontent">
+
+		<h3>General information</h3>
+		<ul>
+			<li>Host: Singapore, Singapore</li>
+			<li>Date: {{date}}</li>
+			<li>Contestants: {{contestants}} {%if contestants_unofficial != contestants%}({{contestants_unofficial}}*){%endif%}</li>
+			<li>Schools: {{school_count}} {%if school_unofficial_count != school_count%}({{school_unofficial_count}}*){%endif%}</li>
+			{%if contest_archive != None%}<li><a href="{{contest_archive}}">Contest archive ({{year}}) </a></li>{%endif%}
+			{% if year=='2024' %}<li>CatOI used to be NYOI! We've called it CatOI here for simpilicity.</li>{% endif %}
+		</ul>
+		<h3>Awards</h3>
+		<ul>
+			<li>Maximum possible score: {{qns_max_score}}</li>
+			
+
+			<li>Gold medals: {{gold_count}} {%if gold_unofficial_count != gold_count%}({{gold_unofficial_count}}*){%endif%} (≥ {{gold_cutoff}} points)</li>
+			<li>Silver medals: {{silver_count}} {%if silver_unofficial_count != silver_count%}({{silver_unofficial_count}}*){%endif%} (≥ {{silver_cutoff}} points)</li>
+			<li>Bronze medals: {{bronze_count}} {%if bronze_unofficial_count != bronze_count%}({{bronze_unofficial_count}}*){%endif%} (≥ {{bronze_cutoff}} points)</li>
+			<li>Honourable mentions: {{hm_count}}</li>
+		</ul>
+		<p>Do note that someone being marked as unofficial is at the organisers' disgretion. General rule of thumb is ≥ NOI silver.</p>
+		<p>Unlike NOI and IOI, Honourable Mention is awarded for the top non-medallist, non-zero score in each school.</p>
+	</div>
+</div>
+
+</body></html>

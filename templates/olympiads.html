@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+
+<html><head><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/captcha/recaptcha/hunter.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/captcha/recaptcha/interceptor.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/communication_helpers.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/core_helpers.js"></script>
+<base href="/"><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="stylesheet" href="{{url_for('static', filename='design.css')}}"><!--[if IE 9]><style type="text/css">.countrydata {min-width: 380px;}</style><![endif]--><title>CatOI {{year}}: Results</title>
+</head>
+<body>
+<div class="mainpage"><a class="nounder" href="https://ioinformatics.org/"><img class="mainimage" alt="CatOI" width="159" height="90" src="{{url_for('static', filename='logo.png')}}"></a><a class="nounder" href="/"><div class="mainheader">Cat Olympiad in Informatics – Statistics</div></a><div><div class="mainmenu"><a href="olympiads/">Olympiads</a><a href="countries/">Schools</a><a href="tasks/">Tasks</a><a href="halloffame/">Hall of Fame</a><a href="search">Search</a></div><div class="secmenu"><a href="login">Login</a><a href="people/add">Add</a></div></div>
+	<div class="basicname">Olympiads</div><div class="maincontent nocorner">
+<table border="1">
+<tbody>
+<tr>
+	<th>No.</th>
+	<th><a href="olympiads/{%if ('year' == sort_by and sorttriangle == '▼')%}?sort=year_asc{%endif%}">Year</a>{% if 'year' == sort_by %}<div class="sorttriangle">{{sorttriangle}}</div>{%endif%}</th>
+	<th>Dates</th>
+	<th><a href="olympiads/?sort=contestants_{%if 'contestants' == sort_by and sorttriangle == '▼'%}asc{%else%}desc{%endif%}">Contestants</a>{% if 'contestants' == sort_by %}<div class="sorttriangle">{{sorttriangle}}</div>{%endif%}</th>
+	<th><a href="olympiads/?sort=schools_{%if 'schools' == sort_by and sorttriangle == '▼'%}asc{%else%}desc{%endif%}">Schools</a>{% if 'schools' == sort_by %}<div class="sorttriangle">{{sorttriangle}}</div>{%endif%}</th>
+</tr>
+
+{%for olympiad in olympiad_list%}
+<tr><td><a href="olympiads/{{olympiad[0]}}">{{olympiad[0]-2023}}</a></td><td><a href="olympiads/{{olympiad[0]}}">{{olympiad[0]}}</a></td><td>{{olympiad[1]}}</td><td>{{olympiad[2]}}</td><td>{{olympiad[3]}}</td></tr>
+{%endfor%}
+
+
+</table>
+
+</div>
+
+</div>
+
+</body></html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html><head><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/captcha/recaptcha/hunter.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/captcha/recaptcha/interceptor.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/communication_helpers.js"></script><script src="chrome-extension://infdcenbdoibcacogknkjleclhnjdmfh/content/core_helpers.js"></script>
+<base href="/"><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="stylesheet" href="{{url_for('static', filename='design.css')}}"><!--[if IE 9]><style type="text/css">.countrydata {min-width: 380px;}</style><![endif]--><title>CatOI {{year}}: Results</title>
+</head>
+<body>
+<div class="mainpage"><a class="nounder" href="https://ioinformatics.org/"><img class="mainimage" alt="CatOI" width="159" height="90" src="{{url_for('static', filename='logo.png')}}"></a><a class="nounder" href="/"><div class="mainheader">Cat Olympiad in Informatics – Statistics</div></a><div><div class="mainmenu"><a href="olympiads/">Olympiads</a><a href="countries/">Schools</a><a href="tasks/">Tasks</a><a href="halloffame/">Hall of Fame</a><a href="search">Search</a></div><div class="secmenu"><a href="login">Login</a><a href="people/add">Add</a></div></div><div class="countryinfo"><div class="countrydata olympdata"><div class="countryname">
+
+{% if year!='2024' %}<a href="results/{{year | int-1}}">←</a>{% endif %}
+
+<div>CatOI {{year}}</div>
+
+{% if year!='2025' %}<a href="results/{{year | int+1}}">→</a>{% endif %}
+
+</div>
+<div class="countrymenu"><a href="administration/{{year}}">Administration</a><a href="tasks/{{year}}/">Tasks</a><a href="contestants/{{year}}">Contestants</a><a href="delegations/{{year}}">Delegations</a><a class="selected" href="results/{{year}}">Results</a><a href="olympiads/{{year}}">Main</a></div></div></div>
+	<div class="maincontent">
+	<p><a href="results/{{year}}?unofficial={{(1-unofficial) | abs}}">{%if unofficial==0%}Include uno{%else%}Exclude uno{%endif%}fficial</a></p>
+
+		<table border="1"><tbody>
+		<tr>
+			<th rowspan="2"><a href="results/{{year}}?sort=rank_{%if 'rank' == sort_by and sorttriangle == '▼'%}desc{%else%}asc{%endif%}{%if unofficial == 1%}&unofficial=1{%endif%}">Rank</a>{% if 'rank' == sort_by %}<div class="sorttriangle">{{sorttriangle}}</div>{%endif%}</th>
+			<th rowspan="2"><a href="results/{{year}}?sort=contestant_{%if 'contestant' == sort_by and sorttriangle == '▼'%}desc{%else%}asc{%endif%}{%if unofficial == 1%}&unofficial=1{%endif%}">Contestant</a>{% if 'contestant' == sort_by %}<div class="sorttriangle">{{sorttriangle}}</div>{%endif%}</th>
+			<th rowspan="2"><a href="results/{{year}}?sort=school_{%if 'school' == sort_by and sorttriangle == '▼'%}desc{%else%}asc{%endif%}{%if unofficial == 1%}&unofficial=1{%endif%}">School</a>{% if 'school' == sort_by %}<div class="sorttriangle">{{sorttriangle}}</div>{%endif%}</th>
+			{%for task in task_ids%}
+			<th rowspan="2" class="taskscore"><a href="results/{{year}}?sort=q{{(loop.index0 + 1)}}_{%if 'q'~ ((loop.index0 + 1) | string)== sort_by and sorttriangle == '▼'%}desc{%else%}asc{%endif%}{%if unofficial == 1%}&unofficial=1{%endif%}">{{task}}</a>{% if 'q'~((loop.index0 + 1)|string) == sort_by %}<div class="sorttriangle">{{sorttriangle}}</div>{%endif%}</th>
+			{%endfor%}
+			<th colspan="2"><a href="results/{{year}}?sort=score_{%if 'score' == sort_by and sorttriangle == '▼'%}desc{%else%}asc{%endif%}{%if unofficial == 1%}&unofficial=1{%endif%}">Score</a>{% if 'score' == sort_by %}<div class="sorttriangle">{{sorttriangle}}</div>{%endif%}</th>
+			<th rowspan="2">Award</th>
+			<th rowspan="2">Special Award(s)</th></tr>
+			<tr><th>Abs.</th><th>Rel.</th>
+		</tr>
+		
+		{% for scores in scores_list%}
+				
+		
+		<tr>
+			<td class="{{scores[6]}}">{{scores[0]}}</td>
+			<td class="{{scores[6]}} leftalign"><a href="people/{{scores[1]}}">{{scores[2]}}</a></td>
+			<td class="{{scores[6]}} leftalign"><a href="countries/{{scores[4]}}">{{scores[3]}}</a></td>
+			
+			{% for score in scores[5] %}
+				{% if dp_list[loop.index0] == 0 %}
+					<td class="{{ scores[6] }} taskscore">{{ "%.0f"|format(score | float) }}</td>
+				{% elif dp_list[loop.index0] == 1 %}
+					<td class="{{ scores[6] }} taskscore">{{ "%.1f"|format(score | float) }}</td>
+				{% else %}
+					<td class="{{ scores[6] }} taskscore">{{ "%.2f"|format(score | float) }}</td>
+				{% endif %}
+			{% endfor %}
+			
+			
+			<td class="{{scores[6]}}">{{scores[8] }}</td>
+			<td class="{{scores[6]}}">{{"%.2f"|format((scores[5] | sum)/tot_score*100)}}%</td>
+			{%if scores[6] == "gold"%}
+			<td class="{{scores[6]}}">Gold{%if scores[9]==0%}*{%endif%}</td>
+			{%elif scores[6] == "silver"%}
+			<td class="{{scores[6]}}">Silver{%if scores[9]==0%}*{%endif%}</td>
+			{%elif scores[6] == "bronze"%}
+			<td class="{{scores[6]}}">Bronze{%if scores[9]==0%}*{%endif%}</td>
+			{%elif scores[6] == "hm"%}
+			<td class="{{scores[6]}}">Honourable Mention</td>
+			{%else%}
+			<td class="{{scores[6]}}"></td>
+			{%endif%}
+			<td class="{{scores[6]}}">{{scores[7]}}</td>
+
+		{%endfor%}
+	</tbody></table>
+
+</div>
+</div>
+
+</body></html>
