@@ -1,0 +1,110 @@
+{
+ "2024": {
+  "date": "12 November 2024",
+  "archive": "https://codebreaker.xyz/contest/nyoi2024",
+  "tasks": [
+   {
+    "name": "Unwind",
+    "id": "U",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Sport",
+    "id": "Sp",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Hungry Cats",
+    "id": "H",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Study",
+    "id": "St",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Jewels",
+    "id": "J",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Canteen",
+    "id": "C",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Aerion",
+    "id": "A",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Promo",
+    "id": "P",
+    "max": 100,
+    "dp": 0
+   }
+  ]
+ },
+ "2025": {
+  "date": "14 November 2025",
+  "archive": "https://codebreaker.xyz/contest/catoi2025",
+  "tasks": [
+   {
+    "name": "Platonic Drinks",
+    "id": "D",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Fuji",
+    "id": "F",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Candies",
+    "id": "C",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Aura",
+    "id": "A",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Problemsetter",
+    "id": "P",
+    "max": 100,
+    "dp": 1
+   },
+   {
+    "name": "Staircase",
+    "id": "S",
+    "max": 100,
+    "dp": 1
+   },
+   {
+    "name": "Merging",
+    "id": "M",
+    "max": 100,
+    "dp": 0
+   },
+   {
+    "name": "Find the Array",
+    "id": "F",
+    "max": 100,
+    "dp": 2
+   }
+  ]
+ }
+}
