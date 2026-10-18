@@ -128,9 +128,11 @@ function tasks(year, q) {
   const key = {year: x => +x.y, name: x => x.t.name.toLowerCase(), max: x => x.t.max, avg: x => x.avg, avgrel: x => x.rel, full: x => x.full, fullrel: x => x.fullrel};
   const kf = key[k] || key.year, m = dir == 'asc' ? 1 : -1;
   items.sort((a, b) => ((kf(a) > kf(b)) - (kf(a) < kf(b))) * m || (a.y - b.y) * (k == 'year' ? m : -1) || a.i - b.i);
-  const grouped = k == 'year', base = 'tasks' + (year ? '/' + year : '');
-  const body = items.map((x, n) => { const {y, i, t} = x, span = grouped ? D.Y[y].tasks.length : 0;
-    const yearCell = grouped ? (i == 0 || n == 0 || items[n-1].y != y ? `<td rowspan="${span}"><a href="#/olympiads/${y}">${y}</a></td>` : '') : `<td><a href="#/olympiads/${y}">${y}</a></td>`;
+  const base = 'tasks' + (year ? '/' + year : '');
+  // merge the Year cell across adjacent rows that share a year (works for any sort order)
+  const body = items.map((x, n) => { const {y, i, t} = x; let yearCell = '';
+    if (n == 0 || items[n-1].y != y) { let span = 1; while (items[n + span] && items[n + span].y == y) span++;
+      yearCell = `<td rowspan="${span}"><a href="#/olympiads/${y}">${y}</a></td>`; }
     return `<tr>${yearCell}<td>${i + 1}</td><td>${E(t.name)}</td><td>${f(t.max, t.dp)}</td><td>${f(x.avg, 2)}</td><td>${f(x.rel * 100, 2)}%</td><td>${x.full}</td><td>${f(x.fullrel * 100, 2)}%</td></tr>`; }).join('');
   const T = (key, l, def, attr) => sortTh(base, k, dir, key, l, def, attr);
   const t = `<table><tbody><tr>${T('year', 'Year', 'desc')}<th rowspan="2">No.</th>${T('name', 'Name', 'asc')}${T('max', 'Max. Score')}
